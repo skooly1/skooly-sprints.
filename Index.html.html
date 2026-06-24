@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>خطة السبرينتس - Skooly Smart AI</title>
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --skooly-blue: #0B4F9E;
+    --skooly-cyan: #00C8E0;
+    --skooly-teal: #007B8E;
+    --skooly-dark: #050D1A;
+    --skooly-navy: #061830;
+    --skooly-mid: #0A2A52;
+
+    --sprint-1: #00C8E0;
+    --sprint-2: #7C3AED;
+    --sprint-3: #0B4F9E;
+    --sprint-4: #059669;
+    --sprint-5: #DC2626;
+
+    --status-done: #00C48C;
+    --status-active: #FFB800;
+    --status-planned: #6B7280;
+
+    --glass: rgba(255,255,255,0.04);
+    --glass-border: rgba(0,200,224,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--skooly-dark);
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    color: #E8F4FF;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(0,200,224,0.08) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 60% at 80% 80%, rgba(11,79,158,0.12) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 40% at 50% 50%, rgba(0,123,142,0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,200,224,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,200,224,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 40px 24px 60px;
+  }
+
+  /* HEADER */
+  .header {
+    text-align: center;
+    margin-bottom: 50px;
+    animation: fadeDown 0.8s ease both;
+  }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 16px;
+  }
+
+  .logo-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--skooly-cyan), var(--skooly-blue));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    animation: pulse 3s ease infinite;
+  }
+
+  .brand-text {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 0%, var(--skooly-cyan) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 2px;
+  }
+
+  .page-title {
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 10px;
+  }
+
+  .page-title span {
+    background: linear-gradient(135deg, var(--skooly-cyan), #7DF9FF);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .page-subtitle {
+    font-size: 15px;
+    color: rgba(200,230,255,0.6);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .header-divider {
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--skooly-cyan), transparent);
+    margin: 20px auto;
+  }
+
+  /* OVERVIEW STATS */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 16px;
+    margin-bottom: 40px;
+    animation: fadeUp 0.8s 0.2s ease both;
+  }
+
+  .stat-card {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 20px 16px;
+    text-align: center;
+    backdrop-filter: blur(12px);
+    transition: transform 0.3s ease, border-color 0.3s ease;
+  }
+
+  .stat-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--skooly-cyan);
+  }
+
+  .stat-icon { font-size: 26px; margin-bottom: 8px; }
+  .stat-value {
+    font-size: 28px;
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff, var(--skooly-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: rgba(200,230,255,0.6);
+    font-weight: 600;
+  }
+
+  /* TIMELINE BAR */
+  .timeline-wrapper {
+    background: var(--glass);
+    border: 1px solid var(--glass-border);
+    border-radius: 24px;
+    padding: 28px 32px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(20px);
+    animation: fadeUp 0.8s 0.25s ease both;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .timeline-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -1px; left: 50%; right: -1px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--skooly-cyan), transparent);
+    transform: translateX(-50%);
+    width: 60%;
+  }
+
+  .section-title {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--skooly-cyan);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .section-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: var(--skooly-cyan);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .gantt-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+
+  .gantt-label {
+    width: 130px;
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(200,230,255,0.8);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  .gantt-track {
+    flex: 1;
+    height: 32px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .gantt-bar {
+    position: absolute;
+    top: 4px;
+    height: 24px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: filter 0.3s ease;
+  }
+
+  .gantt-bar:hover { filter: brightness(1.2); }
+
+  .gantt-months {
+    display: flex;
+    margin-right: 142px;
+    margin-bottom: 6px;
+  }
+
+  .gantt-month {
+    flex: 1;
+    text-align: center;
+    font-size: 10px;
+    color: rgba(200,230,255,0.4);
+    font-weight: 600;
+  }
+
+  /* SPRINTS GRID */
+  .sprints-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 20px;
+    animation: fadeUp 0.8s 0.3s ease both;
+  }
+
+  .sprint-card {
+    background: var(--glass);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .sprint-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 24px 60px rgba(0,0,0,0.5);
+  }
+
+  .sprint-header {
+    padding: 22px 24px 18px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sprint-header::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.06;
+  }
+
+  .sprint-num-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+
+  .sprint-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 100px;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    border: 1px solid;
+  }
+
+  .sprint-status {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 100px;
+  }
+
+  .status-active {
+    background: rgba(255,184,0,0.15);
+    border: 1px solid rgba(255,184,0,0.35);
+    color: var(--status-active);
+  }
+
+  .status-planned {
+    background: rgba(107,114,128,0.15);
+    border: 1px solid rgba(107,114,128,0.3);
+    color: #9CA3AF;
+  }
+
+  .status-done {
+    background: rgba(0,196,140,0.12);
+    border: 1px solid rgba(0,196,140,0.3);
+    color: var(--status-done);
+  }
+
+  .sprint-title {
+    font-size: 17px;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 6px;
+    line-height: 1.3;
+  }
+
+  .sprint-dates {
+    font-size: 12px;
+    color: rgba(200,230,255,0.5);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .sprint-body {
+    padding: 20px 24px;
+  }
+
+  .sprint-goal {
+    background: rgba(0,200,224,0.06);
+    border: 1px solid rgba(0,200,224,0.15);
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-size: 13px;
+    color: rgba(200,230,255,0.85);
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+
+  .sprint-goal strong {
+    color: var(--skooly-cyan);
+    font-weight: 700;
+  }
+
+  .tasks-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: rgba(200,230,255,0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .tasks-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: rgba(255,255,255,0.06);
+  }
+
+  .task-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .task-item:last-child { border-bottom: none; }
+
+  .task-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .task-wbs {
+    font-size: 10px;
+    font-weight: 700;
+    opacity: 0.5;
+    flex-shrink: 0;
+    padding-top: 2px;
+  }
+
+  .task-text { color: rgba(200,230,255,0.85); flex: 1; }
+
+  .task-owner {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 100px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.06);
+    color: rgba(200,230,255,0.6);
+    white-space: nowrap;
+  }
+
+  /* SPRINT FOOTER */
+  .sprint-footer {
+    padding: 14px 24px;
+    background: rgba(255,255,255,0.02);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .kpi-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .kpi-chip {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(0,200,224,0.08);
+    border: 1px solid rgba(0,200,224,0.2);
+    color: var(--skooly-cyan);
+  }
+
+  .progress-mini {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    color: rgba(200,230,255,0.6);
+  }
+
+  .progress-bar-mini {
+    width: 80px;
+    height: 5px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .progress-fill-mini {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--skooly-cyan), var(--skooly-blue));
+    transition: width 1s ease;
+  }
+
+  /* SECTION DIVIDER */
+  .section-divider {
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: rgba(200,230,255,0.45);
+    margin: 36px 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    letter-spacing: 0.5px;
+  }
+
+  .section-divider::before,
+  .section-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(0,200,224,0.2), transparent);
+  }
+
+  /* FOOTER */
+  .footer {
+    text-align: center;
+    margin-top: 60px;
+    padding-top: 30px;
+    border-top: 1px solid rgba(0,200,224,0.1);
+    color: rgba(200,230,255,0.35);
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+  }
+
+  /* COLOR VARIANTS */
+  .s1 { --sc: #00C8E0; }
+  .s2 { --sc: #7C3AED; }
+  .s3 { --sc: #2563EB; }
+  .s4 { --sc: #059669; }
+  .s5 { --sc: #DC2626; }
+
+  .sprint-card.s1 { border-color: rgba(0,200,224,0.25); }
+  .sprint-card.s1:hover { border-color: rgba(0,200,224,0.6); box-shadow: 0 24px 60px rgba(0,200,224,0.12); }
+  .sprint-card.s2 { border-color: rgba(124,58,237,0.25); }
+  .sprint-card.s2:hover { border-color: rgba(124,58,237,0.6); box-shadow: 0 24px 60px rgba(124,58,237,0.12); }
+  .sprint-card.s3 { border-color: rgba(37,99,235,0.25); }
+  .sprint-card.s3:hover { border-color: rgba(37,99,235,0.6); box-shadow: 0 24px 60px rgba(37,99,235,0.12); }
+  .sprint-card.s4 { border-color: rgba(5,150,105,0.25); }
+  .sprint-card.s4:hover { border-color: rgba(5,150,105,0.6); box-shadow: 0 24px 60px rgba(5,150,105,0.12); }
+  .sprint-card.s5 { border-color: rgba(220,38,38,0.25); }
+  .sprint-card.s5:hover { border-color: rgba(220,38,38,0.6); box-shadow: 0 24px 60px rgba(220,38,38,0.12); }
+
+  .sprint-badge.s1 { background: rgba(0,200,224,0.12); border-color: rgba(0,200,224,0.3); color: #00C8E0; }
+  .sprint-badge.s2 { background: rgba(124,58,237,0.12); border-color: rgba(124,58,237,0.3); color: #A78BFA; }
+  .sprint-badge.s3 { background: rgba(37,99,235,0.12); border-color: rgba(37,99,235,0.3); color: #60A5FA; }
+  .sprint-badge.s4 { background: rgba(5,150,105,0.12); border-color: rgba(5,150,105,0.3); color: #34D399; }
+  .sprint-badge.s5 { background: rgba(220,38,38,0.12); border-color: rgba(220,38,38,0.3); color: #F87171; }
+
+  .task-dot.s1 { background: #00C8E0; }
+  .task-dot.s2 { background: #A78BFA; }
+  .task-dot.s3 { background: #60A5FA; }
+  .task-dot.s4 { background: #34D399; }
+  .task-dot.s5 { background: #F87171; }
+
+  .progress-fill-mini.s1 { background: linear-gradient(90deg, #00C8E0, #0B4F9E); }
+  .progress-fill-mini.s2 { background: linear-gradient(90deg, #7C3AED, #A78BFA); }
+  .progress-fill-mini.s3 { background: linear-gradient(90deg, #2563EB, #60A5FA); }
+  .progress-fill-mini.s4 { background: linear-gradient(90deg, #059669, #34D399); }
+  .progress-fill-mini.s5 { background: linear-gradient(90deg, #DC2626, #F87171); }
+
+  @media (max-width: 768px) {
+    .sprints-grid { grid-template-columns: 1fr; }
+    .gantt-label { width: 90px; font-size: 10px; }
+    .gantt-months { margin-right: 102px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo-row">
+      <div class="logo-icon">⌚</div>
+      <span class="brand-text">SKOOLY SMART AI</span>
+    </div>
+    <h1 class="page-title">خطة <span>السبرينتس</span> التشغيلية</h1>
+    <div class="header-divider"></div>
+    <p class="page-subtitle">Sprint Planning — مبنية على WBS، KPIs، وأصحاب المصلحة | الإصدار 1.0 — 2026</p>
+  </div>
+
+  <!-- STATS ROW -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-icon">🚀</div>
+      <div class="stat-value">5</div>
+      <div class="stat-label">سبرينتس إجمالية</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📅</div>
+      <div class="stat-value">12</div>
+      <div class="stat-label">أسبوع (3 أشهر)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">✅</div>
+      <div class="stat-value">30</div>
+      <div class="stat-label">مهمة تشغيلية</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">🏫</div>
+      <div class="stat-value">1</div>
+      <div class="stat-label">مدارس مستهدفة</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">💰</div>
+      <div class="stat-value">290K</div>
+      <div class="stat-label">ريال إيراد سنوي (ARR)</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-value">12</div>
+      <div class="stat-label">عضو في الفريق</div>
+    </div>
+  </div>
+
+  <!-- GANTT TIMELINE -->
+  <div class="timeline-wrapper">
+    <div class="section-title">🗓 الخط الزمني الإجمالي للسبرينتس</div>
+    <div class="gantt-months">
+      <div class="gantt-month">الشهر 1</div>
+      <div class="gantt-month">الشهر 2</div>
+      <div class="gantt-month">الشهر 3</div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">S1 — التخطيط</div>
+      <div class="gantt-track">
+        <div class="gantt-bar s1" style="right:0%; width:33%; background:linear-gradient(90deg,#00C8E0,#007B8E);">S1 | أسبوع 1-2</div>
+      </div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">S2 — البنية التقنية</div>
+      <div class="gantt-track">
+        <div class="gantt-bar s2" style="right:16.5%; width:33%; background:linear-gradient(90deg,#7C3AED,#5B21B6);">S2 | أسبوع 2-4</div>
+      </div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">S3 — المنتج والجهاز</div>
+      <div class="gantt-track">
+        <div class="gantt-bar s3" style="right:33%; width:34%; background:linear-gradient(90deg,#2563EB,#1E40AF);">S3 | أسبوع 5-7</div>
+      </div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">S4 — الإطلاق التجريبي</div>
+      <div class="gantt-track">
+        <div class="gantt-bar s4" style="right:54%; width:33%; background:linear-gradient(90deg,#059669,#065F46);">S4 | أسبوع 8-10</div>
+      </div>
+    </div>
+
+    <div class="gantt-row">
+      <div class="gantt-label">S5 — الإطلاق الرسمي</div>
+      <div class="gantt-track">
+        <div class="gantt-bar s5" style="right:73%; width:27%; background:linear-gradient(90deg,#DC2626,#991B1B);">S5 | أسبوع 11-12</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SPRINTS -->
+
+  <div class="section-divider">🔵 المرحلة الأولى — التخطيط والإعداد</div>
+  <div class="sprints-grid">
+
+    <!-- SPRINT 1 -->
+    <div class="sprint-card s1">
+      <div class="sprint-header">
+        <div class="sprint-num-row">
+          <div class="sprint-badge s1">🔵 سبرينت 1</div>
+          <div class="sprint-status status-done">✅ مكتمل</div>
+        </div>
+        <div class="sprint-title">التخطيط الاستراتيجي وتأسيس الفريق</div>
+        <div class="sprint-dates">📅 الأسبوع 1 – 2 &nbsp;|&nbsp; المدة: أسبوعان</div>
+      </div>
+      <div class="sprint-body">
+        <div class="sprint-goal">
+          <strong>هدف السبرينت:</strong> تحديد أهداف المشروع، توزيع الأدوار على الفريق المكوّن من 12 عضواً، وبناء المرجعية الوثائقية الكاملة للمشروع.
+        </div>
+        <div class="tasks-label">📋 المهام التشغيلية</div>
+
+        <div class="task-item">
+          <div class="task-dot s1"></div>
+          <div class="task-wbs">1</div>
+          <div class="task-text">تحديد أهداف المشروع وصياغة رؤية Skooly Smart AI</div>
+          <div class="task-owner">براء البطاطي</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s1"></div>
+          <div class="task-wbs">2</div>
+          <div class="task-text">تحليل المتطلبات التقنية والتجارية مع أصحاب المصلحة</div>
+          <div class="task-owner">فريق المنتج</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s1"></div>
+          <div class="task-wbs">3</div>
+          <div class="task-text">توزيع الأدوار الـ 12 عبر الأقسام المتخصصة (تقني، تسويق، مالية)</div>
+          <div class="task-owner">مدير المشروع</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s1"></div>
+          <div class="task-wbs">4</div>
+          <div class="task-text">إعداد الميزانية الأولية ومتابعة الأسهم مع المستثمرين والداعمين</div>
+          <div class="task-owner">CFO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s1"></div>
+          <div class="task-wbs">5</div>
+          <div class="task-text">بناء سجل المخاطر الأولي وتحديد خطة التخفيف للمخاطر الحرجة</div>
+          <div class="task-owner">مدير المشروع</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s1"></div>
+          <div class="task-wbs">6</div>
+          <div class="task-text">انطلاق تصميم الهوية البصرية وإعداد المواد التسويقية الأولى</div>
+          <div class="task-owner">فريق التسويق</div>
+        </div>
+      </div>
+      <div class="sprint-footer">
+        <div class="kpi-chips">
+          <div class="kpi-chip">WBS 1.1–1.3</div>
+          <div class="kpi-chip">Burn Rate ≤15%</div>
+        </div>
+        <div class="progress-mini">
+          <div class="progress-bar-mini">
+            <div class="progress-fill-mini s1" style="width:100%"></div>
+          </div>
+          100%
+        </div>
+      </div>
+    </div>
+
+    <!-- SPRINT 2 -->
+    <div class="sprint-card s2">
+      <div class="sprint-header">
+        <div class="sprint-num-row">
+          <div class="sprint-badge s2">🟣 سبرينت 2</div>
+          <div class="sprint-status status-done">✅ مكتمل</div>
+        </div>
+        <div class="sprint-title">بناء البنية التقنية والنموذج الأولي</div>
+        <div class="sprint-dates">📅 الأسبوع 2 – 4 &nbsp;|&nbsp; المدة: 3 أسابيع</div>
+      </div>
+      <div class="sprint-body">
+        <div class="sprint-goal">
+          <strong>هدف السبرينت:</strong> تصميم النموذج الأولي للمنصة وتجميع المكونات التقنية — تطبيق أولياء الأمور، لوحة تحكم المدرسة، والبنية التحتية السحابية المحلية.
+        </div>
+        <div class="tasks-label">📋 المهام التشغيلية</div>
+
+        <div class="task-item">
+          <div class="task-dot s2"></div>
+          <div class="task-wbs">1</div>
+          <div class="task-text">تصميم النموذج الأولي (Prototype) للتطبيق ولوحة التحكم Skooly OS</div>
+          <div class="task-owner">CTO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s2"></div>
+          <div class="task-wbs">2</div>
+          <div class="task-text">اختيار موردي الساعات الذكية وعقود التوريد المسبق (RFID/NFC)</div>
+          <div class="task-owner">رئيس المنتج</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s2"></div>
+          <div class="task-wbs">3</div>
+          <div class="task-text">تهيئة البنية التحتية السحابية المحلية (استضافة 100% داخل المملكة)</div>
+          <div class="task-owner">CTO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s2"></div>
+          <div class="task-wbs">4</div>
+          <div class="task-text">تطوير منظومة الإشعارات الفورية (Notification Engine) عبر Firebase</div>
+          <div class="task-owner">فريق التطوير</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s2"></div>
+          <div class="task-wbs">5</div>
+          <div class="task-text">تسجيل المنصة لدى هيئة سدايا SDAIA وإعداد وثيقة PDPL</div>
+          <div class="task-owner">مستشار قانوني</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s2"></div>
+          <div class="task-wbs">6</div>
+          <div class="task-text">إطلاق خطة التسويق وتحديد المدارس المستهدفة للمرحلة الأولى (Pipeline ≥ 9)</div>
+          <div class="task-owner">CMO</div>
+        </div>
+      </div>
+      <div class="sprint-footer">
+        <div class="kpi-chips">
+          <div class="kpi-chip">Uptime ≥99.5%</div>
+          <div class="kpi-chip">AES-256 إلزامي</div>
+          <div class="kpi-chip">PDPL 100%</div>
+        </div>
+        <div class="progress-mini">
+          <div class="progress-bar-mini">
+            <div class="progress-fill-mini s2" style="width:100%"></div>
+          </div>
+          100%
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-divider">🟢 المرحلة الثانية — التطوير والاختبار</div>
+  <div class="sprints-grid">
+
+    <!-- SPRINT 3 -->
+    <div class="sprint-card s3">
+      <div class="sprint-header">
+        <div class="sprint-num-row">
+          <div class="sprint-badge s3">🔷 سبرينت 3</div>
+          <div class="sprint-status status-done">✅ مكتمل</div>
+        </div>
+        <div class="sprint-title">تطوير المنتج الكامل واختبار الجهاز الذكي</div>
+        <div class="sprint-dates">📅 الأسبوع 5 – 7 &nbsp;|&nbsp; المدة: 3 أسابيع</div>
+      </div>
+      <div class="sprint-body">
+        <div class="sprint-goal">
+          <strong>هدف السبرينت:</strong> إتمام تطوير تطبيق أولياء الأمور ولوحة Skooly OS مع اختبار الساعة الذكية في بيئة محاكاة واقعية.
+        </div>
+        <div class="tasks-label">📋 المهام التشغيلية</div>
+
+        <div class="task-item">
+          <div class="task-dot s3"></div>
+          <div class="task-wbs">1</div>
+          <div class="task-text">اختبار دقة GPS للباص المدرسي (هدف ≥95% ضمن 50م) على مسارات فعلية</div>
+          <div class="task-owner">CTO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s3"></div>
+          <div class="task-wbs">2</div>
+          <div class="task-text">اختبار المستشعرات الحيوية (نبضات القلب/درجة الحرارة) — دقة ≥98%</div>
+          <div class="task-owner">رئيس المنتج</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s3"></div>
+          <div class="task-wbs">3</div>
+          <div class="task-text">اختبار زمن استجابة الإشعارات &lt;3 ثوانٍ (&lt;1 ثانية للحوادث الأمنية)</div>
+          <div class="task-owner">فريق التطوير</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s3"></div>
+          <div class="task-wbs">4</div>
+          <div class="task-text">اختبار حمل المنصة بتزامن 20 مدرسة (Peak Load ≤2 ثانية)</div>
+          <div class="task-owner">CTO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s3"></div>
+          <div class="task-wbs">5</div>
+          <div class="task-text">استلام الدفعة الأولى من الساعات الذكية من الموردين المعتمدين</div>
+          <div class="task-owner">رئيس المنتج</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s3"></div>
+          <div class="task-wbs">6</div>
+          <div class="task-text">التنسيق المبدئي مع 3 مدارس خاصة لجدولة مرحلة Pilot</div>
+          <div class="task-owner">CMO</div>
+        </div>
+      </div>
+      <div class="sprint-footer">
+        <div class="kpi-chips">
+          <div class="kpi-chip">GPS ≥95%</div>
+          <div class="kpi-chip">Crash Rate &lt;0.5%</div>
+          <div class="kpi-chip">Notif. ≥99%</div>
+        </div>
+        <div class="progress-mini">
+          <div class="progress-bar-mini">
+            <div class="progress-fill-mini s3" style="width:100%"></div>
+          </div>
+          100%
+        </div>
+      </div>
+    </div>
+
+    <!-- SPRINT 4 -->
+    <div class="sprint-card s4">
+      <div class="sprint-header">
+        <div class="sprint-num-row">
+          <div class="sprint-badge s4">🟢 سبرينت 4</div>
+          <div class="sprint-status status-active">🟡 جارٍ التنفيذ</div>
+        </div>
+        <div class="sprint-title">الإطلاق التجريبي مع المدارس الشريكة (Pilot)</div>
+        <div class="sprint-dates">📅 الأسبوع 8 – 10 &nbsp;|&nbsp; المدة: 3 أسابيع</div>
+      </div>
+      <div class="sprint-body">
+        <div class="sprint-goal">
+          <strong>هدف السبرينت:</strong> تشغيل نظام سكولي فعلياً في مدرسة تجريبية واحدة على الأقل، وجمع بيانات أداء حقيقية من أولياء الأمور والإداريين.
+        </div>
+        <div class="tasks-label">📋 المهام التشغيلية</div>
+
+        <div class="task-item">
+          <div class="task-dot s4"></div>
+          <div class="task-wbs">1</div>
+          <div class="task-text">توزيع الساعات الذكية على طلاب المدرسة التجريبية وتفعيل RFID</div>
+          <div class="task-owner">رئيس المنتج</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s4"></div>
+          <div class="task-wbs">2</div>
+          <div class="task-text">توثيق مراحل عمل Pilot اليومية وتسجيل الأعطال والملاحظات الميدانية</div>
+          <div class="task-owner">مدير المشروع</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s4"></div>
+          <div class="task-wbs">3</div>
+          <div class="task-text">إجراء جلسات تدريب الكادر الإداري على Skooly OS (CSAT هدف ≥4/5)</div>
+          <div class="task-owner">فريق التدريب</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s4"></div>
+          <div class="task-wbs">4</div>
+          <div class="task-text">تأهيل أولياء الأمور على تطبيق سكولي (Onboarding Rate هدف ≥85%)</div>
+          <div class="task-owner">CMO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s4"></div>
+          <div class="task-wbs">5</div>
+          <div class="task-text">إجراء اختبار اختراق أول (Penetration Test) من جهة أمن معلومات مستقلة</div>
+          <div class="task-owner">مستشار قانوني</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s4"></div>
+          <div class="task-wbs">6</div>
+          <div class="task-text">إطلاق مفاوضات العقود مع مدرستين إضافيتين (Sales Cycle ≤45 يوماً)</div>
+          <div class="task-owner">CMO</div>
+        </div>
+      </div>
+      <div class="sprint-footer">
+        <div class="kpi-chips">
+          <div class="kpi-chip">Onboarding ≥85%</div>
+          <div class="kpi-chip">NPS ≥70</div>
+          <div class="kpi-chip">Digital Handover ≥95%</div>
+        </div>
+        <div class="progress-mini">
+          <div class="progress-bar-mini">
+            <div class="progress-fill-mini s4" style="width:30%"></div>
+          </div>
+          30%
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="section-divider">🔴 المرحلة الثالثة — الإطلاق الرسمي والتوسع</div>
+  <div class="sprints-grid">
+
+    <!-- SPRINT 5 -->
+    <div class="sprint-card s5" style="grid-column: 1 / -1; max-width: 780px; margin: 0 auto; width: 100%;">
+      <div class="sprint-header">
+        <div class="sprint-num-row">
+          <div class="sprint-badge s5">🔴 سبرينت 5</div>
+          <div class="sprint-status status-planned">🔘 قادم</div>
+        </div>
+        <div class="sprint-title">الإطلاق التجاري الرسمي للمرحلة الأولى — مدرسة واحدة</div>
+        <div class="sprint-dates">📅 الأسبوع 11 – 12 &nbsp;|&nbsp; المدة: أسبوعان</div>
+      </div>
+      <div class="sprint-body">
+        <div class="sprint-goal">
+          <strong>هدف السبرينت:</strong> إطلاق سكولي رسمياً في مدرسة خاصة واحدة، تحقيق ARR أولي قدره 290,525 ريال، وإثبات نموذج العمل كمنصة B2B جاهزة للتوسع للمرحلة الثانية (15 مدرسة).
+        </div>
+        <div class="tasks-label">📋 المهام التشغيلية</div>
+
+        <div class="task-item">
+          <div class="task-dot s5"></div>
+          <div class="task-wbs">1</div>
+          <div class="task-text">إعداد التقرير النهائي للمرحلة الأولى وتقديمه للفريق التنفيذي والمستثمرين</div>
+          <div class="task-owner">مدير المشروع</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s5"></div>
+          <div class="task-wbs">2</div>
+          <div class="task-text">تسليم الملف النهائي للمدرسة (عقود + توثيق + ضمانات الأجهزة)</div>
+          <div class="task-owner">CMO / قانوني</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s5"></div>
+          <div class="task-wbs">3</div>
+          <div class="task-text">تفعيل الحملة التسويقية الرسمية لاستقطاب المدارس المستهدفة للمرحلة الثانية</div>
+          <div class="task-owner">CMO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s5"></div>
+          <div class="task-wbs">4</div>
+          <div class="task-text">مراجعة معدل الاحتراق الشهري مع CFO وضبط ميزانية المرحلة الثانية</div>
+          <div class="task-owner">CFO / CEO</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s5"></div>
+          <div class="task-wbs">5</div>
+          <div class="task-text">تقييم المخاطر الفعلية وتحديث سجل المخاطر بناءً على بيانات Pilot</div>
+          <div class="task-owner">مدير المشروع</div>
+        </div>
+        <div class="task-item">
+          <div class="task-dot s5"></div>
+          <div class="task-wbs">6</div>
+          <div class="task-text">قياس Pilot-to-Contract Conversion Rate (هدف ≥60%) وتحويل التجربة لعقود</div>
+          <div class="task-owner">CMO</div>
+        </div>
+      </div>
+      <div class="sprint-footer">
+        <div class="kpi-chips">
+          <div class="kpi-chip">ARR ≥ 290,525 ر.س</div>
+          <div class="kpi-chip">Pilot Conversion ≥60%</div>
+          <div class="kpi-chip">School Retention ≥90%</div>
+          <div class="kpi-chip">Break-Even Q1</div>
+        </div>
+        <div class="progress-mini">
+          <div class="progress-bar-mini">
+            <div class="progress-fill-mini s5" style="width:0%"></div>
+          </div>
+          0%
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>Skooly Smart AI — خطة السبرينتس التشغيلية © 2026</p>
+    <p style="margin-top:6px;">مُعدّة وفق WBS | KPIs | أصحاب المصلحة &nbsp;|&nbsp; الرئيس التنفيذي: براء البطاطي</p>
+  </div>
+
+</div>
+</body>
+</html>
